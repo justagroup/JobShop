@@ -1,2 +1,4 @@
 #include <stdio.h>
-int main(){}
+int main(){
+	q1123
+}
