@@ -1,7 +1,9 @@
 #include <stdio.h>
 int main(){
+<<<<<<< HEAD
 	q1123
 }}
+}
 =======
 
 1
