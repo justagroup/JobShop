@@ -1,2 +1,8 @@
 #include <stdio.h>
-int main(){}
+int main(){
+
+1
+1
+1
+1
+1}
