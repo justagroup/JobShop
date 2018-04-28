@@ -13,7 +13,8 @@ typedef struct jss_exchange_s{
     unsigned int cost;
     unsigned int *T;
     unsigned int *P;
-    unsigned long long *S;
+    unsigned int *S;
+	unsigned int *F;
 } JSSExchange;
 
 typedef void (*reporter_func)(struct jss_exchange_s *);

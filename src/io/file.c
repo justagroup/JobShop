@@ -50,23 +50,20 @@ JSSExchange* jss_load_from_file(FILE* fp) {
 
 bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 	int i;
-	for(i=0;i<data->m;i++) {
+	for (i = 0; i < data->m; i++) {
 		printf("M%d ", i + 1);
-		unsigned int** jss_temp_store = malloc(sizeof(unsigned int*)*data->n);
+		unsigned int** jss_temp_store = malloc(sizeof(unsigned int*) * data->n);
 		int j;
-		for(j=0;j<data->m;j++) {
+		for (j = 0; j < data->m; j++) {
 			jss_temp_store[i] = malloc(sizeof(unsigned int) * 4);
 		}
 		int k, l;
-		for(k=0;k<data->n;k++)
-			for(l=0;l<data->m;l++) {
-				
+		for (k = 0; k < data->n; k++)
+			for (l = 0; l < data->m; l++) {
+
 			}
-		
-
-
 		printf("(%d,%d-%d,%d) ");
-		
+
 	}
 }
 
