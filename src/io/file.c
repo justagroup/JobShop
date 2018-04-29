@@ -59,7 +59,7 @@ JSSExchange* jss_load_from_file(FILE* fp) {
 bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 	int i;
 	unsigned int max_time = 0;
-	for (i = 1; i <= data->m; i++) {
+	for (i = 1; i <= data->m; i++) {// NO.i machine
 		int j;
 		int ** process_location = calloc(sizeof(int), data->m);
 		for (j = 0; j < data->m; j++)
@@ -85,8 +85,8 @@ bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 			if (end_time > max_time) max_time = end_time;
 			printf(" (%ud,%d-%d,%ud)",
 				start_time,
-				row,
-				col,
+				row+1,
+				col+1,
 				end_time
 			);
 			putchar("\n");
