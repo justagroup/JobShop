@@ -14,7 +14,6 @@ typedef struct jss_exchange_s{
     unsigned int *T;
     unsigned int *P;
     unsigned int *S;
-	unsigned int *F;
 } JSSExchange;
 
 typedef void (*reporter_func)(struct jss_exchange_s *);
