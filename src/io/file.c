@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "file.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,7 +36,7 @@ JSSExchange* jss_load_from_file(FILE* fp) {
 	data->T = (unsigned int*)calloc(sizeof(unsigned int), m * n);
 	data->P = (unsigned int*)calloc(sizeof(unsigned int), m * n);
 	data->S = (unsigned int*)calloc(sizeof(unsigned int), m * n); //start
-	// int ordinal = jss_change_to_num(fp);
+																  // int ordinal = jss_change_to_num(fp);
 	int ordinal;
 	scanf("%ud", &ordinal);
 	while (ordinal != -1) {
@@ -62,13 +61,13 @@ bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 	unsigned int max_time = 0;
 	for (i = 1; i <= data->m; i++) {
 		int j;
-		int ** process_location = calloc(sizeof( int),data->m);
-		for (j = 0; j < data->m; j++) 
-			process_location[j] = calloc(sizeof(int) , 2);
+		int ** process_location = calloc(sizeof(int), data->m);
+		for (j = 0; j < data->m; j++)
+			process_location[j] = calloc(sizeof(int), 2);
 		int process_num = 0;
 		for (j = 0; j < data->n; j++) {//in j row k col ,totally n row m col
 			int k;
-			for (k = 0; k < data->m; k++) 
+			for (k = 0; k < data->m; k++)
 				if (data->T[j*data->m + k] == i) {
 					process_location[process_num][0] = j;
 					process_location[process_num][1] = k;
@@ -99,48 +98,9 @@ bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 	printf("END %ud", max_time);
 }
 
-void jss_destory(JSSExchange* ex){
+void jss_destory(JSSExchange* ex) {
 	free(ex);
 	free(ex->P);
 	free(ex->S);
 	free(ex);
 }
-=======
-//
-// Created by heymi on 2018/4/28.
-//
-#include <stdlib.h>
-#include "file.h"
-
-#define GET(x,i,j) ((x)[(i-1)*m+(j-1)])
-#define SET(x,i,j,v) ((x)[(i-1)*m+(j-1)] = (v))
-#define O(i,j) (((i)<<32)+(j))
-#define Oi(o) ((o)>>32)
-#define Oj(o) ((o)&0xffffffff)
-
-unsigned int m,n,*_Tbegin,*_Tend;
-
-static unsigned int Tbegin(unsigned int i, unsigned int j){
-    if(GET(_Tbegin,i,j)!=0) return GET(_Tbegin,i,j);
-
-}
-bool jss_write_to_file(const JSSExchange *ex,FILE *fp){
-    m = ex->m;n=ex->n;
-    Tbegin = calloc(sizeof(unsigned int),m*n);
-    Tend = calloc(sizeof(unsigned int),m*n);
-    unsigned int count = 0;
-    while(count<m*n){
-        for(unsigned int j=1;j<=n;j++){
-            for(unsigned int i=1;i<=m;i++) {
-                //i为机器号
-                unsigned int _O= GET(ex->S,i,j);
-                unsigned int x = Oi(_O),y=Oj(_O); //第x个工件的第y个工序
-                if(y==1 || GET(Tend,x,y-1)!=0){ //第一道工序或者上一道工序完成时间已经计算出来了
-
-                }
-
-
-            }}
-    }
-}
->>>>>>> 6063d98bff9d6986a76f2165b56dba20d196ebc8
