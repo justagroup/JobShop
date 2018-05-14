@@ -8,16 +8,18 @@
 
 
 
+
 typedef struct jss_exchange_s{
-    unsigned int m,n;
-    unsigned int cost;
-    unsigned int *T;
-    unsigned int *P;
-    unsigned int *S;
+    int m,n;//m machines n jobs
+    int cost;
+    int *T;// 
+    int *P;
+    int *S;
+    int* process_num;
+    int length;
 } JSSExchange;
 
 typedef void (*reporter_func)(struct jss_exchange_s *);
-
 typedef struct jss_algo_s {
     char name[50];
     void *udata;
