@@ -2,8 +2,8 @@
 #include "../../../io/file.h"
 #define MAX_JOB 105 
 #define MAX_MACHINE 25
-#define POPULATION_SIZE 200 
-#define MUTIPLE 10
+#define POPULATION_SIZE 500 
+#define MUTIPLE 5
 #define CHROMO_CHANGE_TIMES 20
 #define MAX_LENGTH 1000
 #define ENLARGE_TIMES 5
@@ -21,7 +21,7 @@ typedef struct
 double jss_rand() {
 	double r;
 	do {
-		r = rand() / RAND_MAX;
+		r = (double)rand() / RAND_MAX;
 	} while (r == 0.0 || r == 1.0);
 	return r;
 }
@@ -131,14 +131,14 @@ void set_start_time(int value, int position, JSSExchange* data) {
 
 /// 对单条染色体进行解码,并返回时间的最大值
 int compute_DAG(int* chromo, JSSExchange* data) {
-	int traveled[MAX_JOB];
+	int traveled[MAX_JOB]={0};
 	bool is_empty[MAX_MACHINE];
 	int m = data->m;
 	int n = data->n;
 	int i;
 	for (i = 0; i < m + 1; i++)
 		is_empty[i] = true;
-	int end_time[MAX_MACHINE];
+	int end_time[MAX_MACHINE]={0};
 	int first_end_time = 0;
 	int last_min_time = 0;
 	for (i = 0; i < data->length; i++) {
@@ -216,20 +216,21 @@ Population* jss_init_population(int population_size, JSSExchange * const data)
 	}
 	free(ordered_list);
 	population_data->population = population;
+	population_data->time_cost = time_cost;
 	population_data->current_chromo_num = population_size;
 	return population_data;
 }
 
-void enlarge_population(Population* population_data) {
+void enlarge_population(Population* population_data,JSSExchange* data) {
 	int i;
 	for (i = 0; i < population_data->population_size*(MUTIPLE - 2); i++) {
 		int chromo1, chromo2;
 		do {
 			chromo1 = rand() % population_data->population_size;
 			chromo2 = rand() % population_data->population_size;
-		} while (chromo1 != chromo2);
+		} while (chromo1 == chromo2);
 		population_data->population[population_data->current_chromo_num] =
-			crossover(population_data->chromo_size, population_data->population[chromo1], population_data->population[chromo2], data);
+			crossover(population_data->chromo_size, population_data->population[chromo1], population_data->population[chromo2],data);
 		population_data->current_chromo_num++;
 		if (jss_rand() < MUTATION_RATE)
 			mutation(population_data->chromo_size, population_data->population[rand() % population_data->population_size]);
@@ -239,6 +240,7 @@ void enlarge_population(Population* population_data) {
 void lessen_population(Population* population_data) {
 	int i = population_data->population_size;
 	for (; i < population_data->current_chromo_num; i++) {
+		population_data->time_cost[i] = 0;
 		free(population_data->population[i]);
 	}
 	population_data->current_chromo_num = population_data->population_size;
@@ -250,7 +252,7 @@ void find_best_chromo(Population* population_data) {
 	int * t = population_data->time_cost;
 	for (i = 0; i < population_data->current_chromo_num; i++) {
 		for (j = population_data->current_chromo_num - 2; j >= i; j--) {
-			if (t[j] < t[j + 1]) {
+			if (t[j] > t[j + 1]) {
 				int temp = t[j];
 				t[j] = t[j + 1];
 				t[j + 1] = temp;
@@ -266,27 +268,27 @@ void find_best_chromo(Population* population_data) {
 void decode(Population* population_data, JSSExchange* data) {
 	int i;
 	for (i = 0; i < population_data->current_chromo_num; i++) {
-		if (population_data->time_cost[i] != 0)
+		if (population_data->time_cost[i] == 0)
 			population_data->time_cost[i] = compute_DAG(population_data->population[i], data);
 	}
 }
 
 int circle_to_find_best(Population* population_data, JSSExchange* data) {
 	int i;
-	Population* population_data = jss_init_population(POPULATION_SIZE, data);
-	enlarge_population(population_data);
+	enlarge_population(population_data,data);
 	decode(population_data, data);
 	find_best_chromo(population_data);
 	lessen_population(population_data);
 	int temp_time = population_data->time_cost[0];
-	for (i = 0; i < 30; i++) {
-		enlarge_population(population_data);
+	for (i = 0; i < 300; i++) {
+		enlarge_population(population_data,data);
 		decode(population_data, data);
 		find_best_chromo(population_data);
 		lessen_population(population_data);
-		int cost = population_data->time_cost[0];
-		if (cost == temp_time) i = 0;
-		else temp_time = cost;
+		temp_time = population_data->time_cost[0];
+		//int cost = population_data->time_cost[0];
+		//if (cost != temp_time) i = 0;
+		//else temp_time = cost;
 	}
 	printf("%d", temp_time);
 }
@@ -294,8 +296,9 @@ int circle_to_find_best(Population* population_data, JSSExchange* data) {
 
 int main() {
 	FILE* fp = fopen("C:\\Users\\Nihil\\Desktop\\JobShop\\src\\test.in", "r");
-	JSSExchange* a = jss_load_from_file(fp);
-	int** p = jss_init_population(POPULATION_SIZE, a);
+	JSSExchange* data = jss_load_from_file(fp);
+	Population* population_data = jss_init_population(POPULATION_SIZE, data);
+	circle_to_find_best(population_data, data);
 	return 0;
 
 }
