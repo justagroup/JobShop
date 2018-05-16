@@ -15,4 +15,7 @@ bool jss_write_to_file(const JSSExchange* data, FILE* fp);
 void jss_destory(JSSExchange* ex);
 
 
+
+
+
 #endif //JSS_FILE_H
