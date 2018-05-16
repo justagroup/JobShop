@@ -17,3 +17,4 @@ int format_solution(int chromo_length, int * chromosome, JSSExchange * data);
 int* mutation(int chromo_length, int* parent);
 
 int compute_DAG(int* chromo, JSSExchange* data);
+void add_time(int *chromo, JSSExchange* data);

@@ -7,6 +7,18 @@
 * machines begin with 1
 * so that we can check whether the job has been finished by search for the machine number in the process.
 */
+int jss_get_position(int i, int j, JSSExchange *data) {
+	return i * data->m + j;
+}
+int jss_get_time_cost(int position, JSSExchange *data) {
+	return data->T[position];
+}
+int jss_get_machine_num(int position, JSSExchange *data) {
+	return data->P[position];
+}
+void jss_set_start_time(int value, int position, JSSExchange* data) {
+	data->S[position] = value;
+}
 
 #define MAX_NUM 2147483633
 JSSExchange* gd_get_operate(JSSExchange* data) {
@@ -67,14 +79,17 @@ void jss_emrge_sort(int* a[2], const JSSExchange* data, int process_num) {
 	int i;
 	for (i = 0; i < process_num; i++) {
 		int j;
-		for (j = process_num - 2; j > i; j--)
-			if (data->S[a[j][0] * data->m + a[j][1]] < data->S[a[j - 1][0] * data->m + a[j - 1][1]]) {
-                int x = a[j][0];
-                int y = a[j][1];
-                a[j][0] = a[j + 1][0], a[j][1] = a[j + 1][1];
-                a[j + 1][0] = a[j][0]; 
-                a[j + 1][1] = a[j][1];
-            }
+		for (j = process_num - 2; j >= i; j--) {
+			int this_position = jss_get_position(a[j][0], a[j][1], data);
+			int next_position = jss_get_position(a[j + 1][0], a[j + 1][1], data);
+			if (data->S[this_position] > data->S[next_position]) {
+				int x = a[j][0];
+				int y = a[j][1];
+				a[j][0] = a[j + 1][0], a[j][1] = a[j + 1][1];
+				a[j + 1][0] = x;
+				a[j + 1][1] = y;
+			}
+		}
 	}
 }
 
