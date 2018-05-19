@@ -107,64 +107,64 @@ int jss_change_to_num(FILE* fp) {
 }
 
 
-//tp间隔输入
-JSSExchange* jss_load_from_file(FILE* fp) {
-	int total_process_num = 0;
-	int n, m; ///m machines n jobs
-	rewind(fp);
-	JSSExchange* data = (JSSExchange*)malloc(sizeof(JSSExchange));
-	fscanf(fp, "%d %d\n", &n, &m);
-	data->n = n;
-	data->m = m;
-	data->T = (int*)calloc(sizeof(int), m * n);
-	data->P = (int*)calloc(sizeof(int), m * n);
-	data->S = (int*)calloc(sizeof(int), m * n);
-	data->process_num = calloc(sizeof(int), n);
-	int i, j;
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < m; j++) {
-			fscanf(fp, "%d", &data->P[i*m + j]);
-			fscanf(fp, "%d", &data->T[i*m + j]);
-			
-			data->P[i*m + j]++;
-		}
-	}
-	for (i = 0; i<n; i++) {
-		data->process_num[i] = m;
-	}
-	data->length = n * m;
-	return data;
-}
-
-////T P分别输入
+////tp间隔输入
 //JSSExchange* jss_load_from_file(FILE* fp) {
 //	int total_process_num = 0;
 //	int n, m; ///m machines n jobs
 //	rewind(fp);
 //	JSSExchange* data = (JSSExchange*)malloc(sizeof(JSSExchange));
-//	fscanf(fp,"%d %d\n", &n, &m);
+//	fscanf(fp, "%d %d\n", &n, &m);
 //	data->n = n;
 //	data->m = m;
 //	data->T = (int*)calloc(sizeof(int), m * n);
 //	data->P = (int*)calloc(sizeof(int), m * n);
 //	data->S = (int*)calloc(sizeof(int), m * n);
 //	data->process_num = calloc(sizeof(int), n);
-//	int i,j;
-//	for(i=0;i<n;i++) {
-//		for (j = 0; j < m; j++)
-//			fscanf(fp, "%d", &data->T[i*m+j]);
-//	}
-//	for(i=0;i<n;i++) {
-//		for(j=0;j<m;j++) {
+//	int i, j;
+//	for (i = 0; i < n; i++) {
+//		for (j = 0; j < m; j++) {
 //			fscanf(fp, "%d", &data->P[i*m + j]);
+//			fscanf(fp, "%d", &data->T[i*m + j]);
+//			
+//			data->P[i*m + j]++;
 //		}
 //	}
-//	for(i=0;i<n;i++) {
+//	for (i = 0; i<n; i++) {
 //		data->process_num[i] = m;
 //	}
 //	data->length = n * m;
 //	return data;
 //}
+
+//T P分别输入
+JSSExchange* jss_load_from_file(FILE* fp) {
+	int total_process_num = 0;
+	int n, m; ///m machines n jobs
+	rewind(fp);
+	JSSExchange* data = (JSSExchange*)malloc(sizeof(JSSExchange));
+	fscanf(fp,"%d %d\n", &n, &m);
+	data->n = n;
+	data->m = m;
+	data->T = (int*)calloc(sizeof(int), m * n);
+	data->P = (int*)calloc(sizeof(int), m * n);
+	data->S = (int*)calloc(sizeof(int), m * n);
+	data->process_num = calloc(sizeof(int), n);
+	int i,j;
+	for(i=0;i<n;i++) {
+		for (j = 0; j < m; j++)
+			fscanf(fp, "%d", &data->T[i*m+j]);
+	}
+	for(i=0;i<n;i++) {
+		for(j=0;j<m;j++) {
+			fscanf(fp, "%d", &data->P[i*m + j]);
+		}
+	}
+	for(i=0;i<n;i++) {
+		data->process_num[i] = m;
+	}
+	data->length = n * m;
+	return data;
+}
 
 //JSSExchange* jss_load_from_file(FILE* fp) {
 //    int total_process_num = 0;
@@ -247,7 +247,7 @@ bool jss_write_to_file(const JSSExchange* data, FILE* fp) {
 }
 
 void jss_destory(JSSExchange* ex) {
-	free(ex);
+	free(ex->T);
 	free(ex->P);
 	free(ex->S);
 	free(ex);
